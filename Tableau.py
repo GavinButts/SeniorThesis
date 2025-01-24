@@ -85,11 +85,11 @@ class Tableau:
                 tableaux.append(tableau)
         return tableaux
     
-    def fundamental_map(self):
+    def map(self):
         if (len(self.shape) != 2):
-            raise Exception("fundamental map can only be applied for partition of size (a+c,a)")
+            raise Exception("map can only be applied for partition of size (a+c,a)")
         if (self.shape[0] >= self.shape[1]):
-            raise Exception("fundamental map can only be applied for partition of size (a,a+c) where c > 0")
+            raise Exception("map can only be applied for partition of size (a,a+c) where c > 0")
         
         c = self.shape[1]-self.shape[0]
 
@@ -151,4 +151,4 @@ if __name__ == "__main__":
         print()
 
     print(f"-- Transformation of {partition} --")
-    tableau_obj.fundamental_map()
+    tableau_obj.map()
