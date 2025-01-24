@@ -84,18 +84,59 @@ class Tableau:
             if self.satisfies_triple_rule(tableau):
                 tableaux.append(tableau)
         return tableaux
+    
+    def fundamental_map(self):
+        if (len(self.shape) != 2):
+            raise Exception("fundamental map can only be applied for partition of size (a+c,a)")
+        if (self.shape[0] >= self.shape[1]):
+            raise Exception("fundamental map can only be applied for partition of size (a,a+c) where c > 0")
+        
+        c = self.shape[1]-self.shape[0]
+
+        for tableau in self.SIT:
+            to_move = []
+            for elem in tableau[1][::-1]:
+                if ((elem - 1) not in tableau[0]) and (len(to_move) < c):
+                    to_move.append(elem)
+
+            tableau_new = []
+            tableau_new.append(sorted(tableau[0]+to_move))
+            tableau_new.append([x for x in tableau[1] if x not in to_move])
+
+            # print(tableau)
+            # print(tableau_new)
+            self.print_transformation(tableau, tableau_new)
+            print()
+
+
+
 
     def print_tableau(self, tableau):
         """Print a single tableau in French notation (rows bottom-to-top)."""
         for row in tableau[::-1]:  # Reverse rows for bottom-to-top display
             print(row)
 
+    def print_transformation(self, tableau_1, tableau_2):
+
+        tableau1 = tableau_1[::-1]
+        tableau2 = tableau_2[::-1]
+
+            # Get the maximum width of rows for consistent alignment
+        max_width1 = max(len(" ".join(map(str, row))) for row in tableau1)
+        max_width2 = max(len(" ".join(map(str, row))) for row in tableau2)
+
+        # Zip rows from both tableaux and display them side by side
+        for row1, row2 in zip(tableau1, tableau2):
+            row1_str = " ".join(map(str, row1)).ljust(max_width1)
+            row2_str = " ".join(map(str, row2)).ljust(max_width2)
+            print(f"{row1_str}      {row2_str}")  # Add space between tableaux
+
 
 
 
 
 if __name__ == "__main__":
-    partition = [2,3] #enter partition size here
+    partition = [3,4] #enter partition size here
     tableau_obj = Tableau(partition)
 
 
@@ -108,3 +149,6 @@ if __name__ == "__main__":
     for syct in tableau_obj.SYCT:
         tableau_obj.print_tableau(syct)
         print()
+
+    print(f"-- Transformation of {partition} --")
+    tableau_obj.fundamental_map()
